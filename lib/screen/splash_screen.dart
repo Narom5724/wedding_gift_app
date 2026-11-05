@@ -13,17 +13,30 @@ class SplashScreen extends StatelessWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final isWide = constraints.maxWidth >= 760;
+          final isWide = constraints.maxWidth >= 800;
           final illustration = ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 440),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: AspectRatio(
-                aspectRatio: 1.503,
-                child: Image.asset(
-                  'assets/images/Pre_wedding.jpg',
-                  fit: BoxFit.cover,
-                  semanticLabel: 'Bride and groom at their wedding',
+            constraints: const BoxConstraints(maxWidth: 800),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.14),
+                    blurRadius: 28,
+                    offset: const Offset(0, 14),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(28),
+                child: AspectRatio(
+                  aspectRatio: 1.15,
+                  child: Image.asset(
+                    'assets/images/Pre_wedding.jpg',
+                    fit: BoxFit.cover,
+                    alignment: const Alignment(0, 0.58),
+                    semanticLabel: 'Bride and groom at their wedding',
+                  ),
                 ),
               ),
             ),

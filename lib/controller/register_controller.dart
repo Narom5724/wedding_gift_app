@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
+import 'package:wedding_gift_app/routes/app_route.dart';
 import 'package:wedding_gift_app/services/auth_service.dart';
 
 class RegisterController extends GetxController {
@@ -43,7 +44,15 @@ class RegisterController extends GetxController {
         password: password.value,
       );
       if (credential.user != null) {
-        Get.offAllNamed('/home');
+        // Firebase signs the user in automatically when an account is created.
+        // Sign out so registration ends at Login and requires an explicit sign-in.
+        await _authService.signOut();
+        await Get.offAllNamed(AppRoute.login);
+        Get.snackbar(
+          'Registration complete',
+          'Your account was created. Please log in.',
+          snackPosition: SnackPosition.BOTTOM,
+        );
       }
     } on FirebaseAuthException catch (error) {
       Get.snackbar(

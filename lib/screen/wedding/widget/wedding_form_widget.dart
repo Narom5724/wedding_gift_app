@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -242,7 +243,9 @@ class _WeddingFormWidgetState extends State<WeddingFormWidget> {
     try {
       final image = await ImagePicker().pickImage(
         source: ImageSource.gallery,
-        imageQuality: 85,
+        maxWidth: 1920,
+        maxHeight: 1920,
+        imageQuality: 80,
       );
       if (image == null) return;
       final bytes = await image.readAsBytes();
@@ -330,7 +333,9 @@ class _WeddingFormWidgetState extends State<WeddingFormWidget> {
       await widget.onSubmit(model);
     } catch (error, stackTrace) {
       debugPrint('Unable to save wedding: $error\n$stackTrace');
-      if (uploadedStoragePath != null) {
+      // A timed-out Firestore write may still complete in the background; keep
+      // the uploaded photo so a successful late write won't point to a deleted file.
+      if (uploadedStoragePath != null && error is! TimeoutException) {
         try {
           await StorageService().deleteImage(uploadedStoragePath);
         } catch (cleanupError, cleanupStackTrace) {
@@ -347,7 +352,9 @@ class _WeddingFormWidgetState extends State<WeddingFormWidget> {
       }
       Get.snackbar(
         'unable_save_wedding'.tr,
-        'wedding_save_failed_message'.tr,
+        error is TimeoutException
+            ? 'wedding_connection_unavailable'.tr
+            : 'wedding_save_failed_message'.tr,
         snackPosition: SnackPosition.BOTTOM,
       );
     } finally {

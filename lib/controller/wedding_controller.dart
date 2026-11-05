@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -80,8 +82,10 @@ class WeddingController extends GetxController {
     isSaving.value = true;
     errorMessage.value = '';
     try {
-      await save();
-      await loadWeddings();
+      await save().timeout(const Duration(seconds: 30));
+      // Refresh the list without keeping the form's Save button spinning
+      // while a separate read request is pending.
+      unawaited(loadWeddings());
     } catch (error, stackTrace) {
       errorMessage.value = _messageFor(error);
       debugPrint('Unable to save wedding: $error\n$stackTrace');
@@ -92,6 +96,9 @@ class WeddingController extends GetxController {
   }
 
   String _messageFor(Object error) {
+    if (error is TimeoutException) {
+      return 'wedding_connection_unavailable'.tr;
+    }
     if (error is FirebaseException) {
       return switch (error.code) {
         'unauthenticated' => 'unauthenticated_wedding'.tr,

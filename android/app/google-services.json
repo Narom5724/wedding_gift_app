@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "232027768091",
+    "project_id": "wedding-gift-app-74269",
+    "storage_bucket": "wedding-gift-app-74269.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:232027768091:android:ad71e480a069cbde9abfbe",
+        "android_client_info": {
+          "package_name": "com.example.wedding_gift_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9nd2675BE8DABZv5B8zCYRMyYBFcCS2Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

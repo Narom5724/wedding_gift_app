@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 
-import 'package:wedding_gift_app/binding/app_binding.dart';
 import 'package:wedding_gift_app/binding/auth_binding.dart';
 import 'package:wedding_gift_app/binding/dashboard_binding.dart';
 import 'package:wedding_gift_app/binding/wedding_binding.dart';
@@ -30,7 +29,6 @@ class AppScreen {
     GetPage(
       name: AppRoute.splash,
       page: () => const SplashScreen(),
-      binding: AppBinding(),
     ),
     GetPage(
       name: AppRoute.login,
@@ -50,7 +48,6 @@ class AppScreen {
       name: AppRoute.home,
       page: () =>
           const ResponsiveAppShell(selectedIndex: 0, child: HomeScreen()),
-      binding: AppBinding(),
     ),
     GetPage(
       name: AppRoute.dashboard,
@@ -62,7 +59,6 @@ class AppScreen {
       name: AppRoute.manage,
       page: () =>
           const ResponsiveAppShell(selectedIndex: 1, child: ManageScreen()),
-      binding: AppBinding(),
     ),
     GetPage(
       name: AppRoute.wedding,

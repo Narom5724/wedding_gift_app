@@ -2,14 +2,28 @@ import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import 'package:wedding_gift_app/models/gift/gift_model.dart';
+import 'package:wedding_gift_app/models/guest/guest_model.dart';
+import 'package:wedding_gift_app/models/wedding/wedding_model.dart';
 import 'package:wedding_gift_app/services/gift_service.dart';
+import 'package:wedding_gift_app/services/guest_service.dart';
+import 'package:wedding_gift_app/services/wedding_service.dart';
 import 'package:wedding_gift_app/utils/firestore_error_message.dart';
 
 class GiftController extends GetxController {
-  GiftController([GiftService? service]) : _service = service ?? GiftService();
+  GiftController([
+    GiftService? service,
+    WeddingService? weddingService,
+    GuestService? guestService,
+  ]) : _service = service ?? GiftService(),
+       _weddingService = weddingService ?? WeddingService(),
+       _guestService = guestService ?? GuestService();
 
   final GiftService _service;
+  final WeddingService _weddingService;
+  final GuestService _guestService;
   final gifts = <GiftModel>[].obs;
+  final weddingNames = <String, String>{}.obs;
+  final guestNames = <String, String>{}.obs;
   final isLoading = false.obs;
   final isSaving = false.obs;
   final searchText = ''.obs;
@@ -20,6 +34,21 @@ class GiftController extends GetxController {
   void onInit() {
     super.onInit();
     loadGifts();
+  }
+
+  Future<void> loadRelatedNames() async {
+    try {
+      final weddings = await _weddingService.fetchWeddings();
+      final guests = await _guestService.fetchGuests();
+      weddingNames.assignAll({
+        for (final WeddingModel wedding in weddings) wedding.id: wedding.title,
+      });
+      guestNames.assignAll({
+        for (final GuestModel guest in guests) guest.id: guest.fullName,
+      });
+    } catch (error, stackTrace) {
+      debugPrint('Unable to load gift relationship names: $error\n$stackTrace');
+    }
   }
 
   Future<void> loadGifts() async {

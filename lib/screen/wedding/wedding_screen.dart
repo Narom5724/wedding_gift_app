@@ -43,14 +43,12 @@ class _WeddingScreenState extends State<WeddingScreen> {
         final isWide = constraints.maxWidth >= 600;
 
         return Scaffold(
-          appBar: isWide
-              ? null
-              : AppBar(
-                  leading: BackButton(onPressed: Get.back),
-                  title: Text('weddings'.tr),
-                ),
+          appBar: AppBar(
+            leading: BackButton(onPressed: Get.back),
+            title: Text('weddings'.tr),
+          ),
           body: SafeArea(
-            top: isWide,
+            top: false,
             child: Padding(
               padding: EdgeInsets.all(isWide ? 12 : 16),
               child: Obx(() {

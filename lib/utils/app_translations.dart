@@ -6,6 +6,9 @@ class AppTranslations extends Translations {
     'en': {
       'app_name': 'Wedding Gift Book',
       'welcome': 'Welcome',
+      'welcome_title': 'Your wedding story starts here',
+      'welcome_subtitle':
+          'Keep every wedding detail, guest, and gift beautifully together.',
       'login': 'Login',
       'register': 'Register',
       'email': 'Email',
@@ -56,6 +59,14 @@ class AppTranslations extends Translations {
       'wedding_title_hint': 'For example, The Sokha Wedding',
       'required_wedding_title': 'Please enter the wedding title.',
       'search_weddings': 'Search weddings',
+      'search_gifts': 'Search gifts by ID, amount, date, or notes',
+      'search_guests': 'Search guests',
+      'filter_guest_relationship': 'Filter by relationship',
+      'search_reports': 'Search reports by wedding name',
+      'refresh_reports': 'Refresh reports',
+      'no_reports_match_search': 'No reports match your search.',
+      'no_weddings_for_report':
+          'No weddings yet. Create a wedding to see its report here.',
       'filter_by_date': 'Filter by date',
       'clear_date_filter': 'Clear date filter',
       'couple': 'Couple',
@@ -248,6 +259,9 @@ class AppTranslations extends Translations {
     'km': {
       'app_name': 'សៀវភៅអំណោយរំលោះអាពាហ៍ពិពាហ៍',
       'welcome': 'សូមស្វាគមន៍',
+      'welcome_title': 'រឿងរ៉ាវអាពាហ៍ពិពាហ៍របស់អ្នកចាប់ផ្តើមនៅទីនេះ',
+      'welcome_subtitle':
+          'រក្សាទុកព័ត៌មានពិធីមង្គលការ ភ្ញៀវ និងអំណោយរបស់អ្នកនៅកន្លែងតែមួយ។',
       'login': 'ចូល',
       'register': 'ចុះឈ្មោះ',
       'email': 'អ៊ីមែល',
@@ -298,6 +312,14 @@ class AppTranslations extends Translations {
       'wedding_title_hint': 'ឧទាហរណ៍ ពិធីមង្គលការ សុខា',
       'required_wedding_title': 'សូមបញ្ចូលចំណងជើងពិធីមង្គលការ។',
       'search_weddings': 'ស្វែងរកពិធីមង្គលការ',
+      'search_gifts': 'ស្វែងរកអំណោយតាមលេខសម្គាល់ ចំនួន កាលបរិច្ឆេទ ឬកំណត់ចំណាំ',
+      'search_guests': 'ស្វែងរកភ្ញៀវ',
+      'filter_guest_relationship': 'ត្រងតាមទំនាក់ទំនង',
+      'search_reports': 'ស្វែងរករបាយការណ៍តាមឈ្មោះពិធីមង្គលការ',
+      'refresh_reports': 'ផ្ទុករបាយការណ៍ឡើងវិញ',
+      'no_reports_match_search': 'គ្មានរបាយការណ៍ដែលត្រូវនឹងការស្វែងរកទេ។',
+      'no_weddings_for_report':
+          'មិនទាន់មានពិធីមង្គលការទេ។ សូមបង្កើតពិធីមង្គលការដើម្បីមើលរបាយការណ៍។',
       'filter_by_date': 'តម្រងតាមកាលបរិច្ឆេទ',
       'clear_date_filter': 'សម្អាតតម្រងកាលបរិច្ឆេទ',
       'couple': 'គូស្វាមីភរិយា',

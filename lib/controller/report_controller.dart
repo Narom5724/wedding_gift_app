@@ -7,8 +7,19 @@ import 'package:wedding_gift_app/services/report_service.dart';
 class ReportController extends GetxController {
   final ReportService _service = ReportService();
   final reportList = <GiftReportModel>[].obs;
+  final searchText = ''.obs;
   final isLoading = false.obs;
   final errorMessage = ''.obs;
+
+  List<GiftReportModel> get filteredReports {
+    final query = searchText.value.trim().toLowerCase();
+    if (query.isEmpty) return reportList.toList();
+    return reportList
+        .where((report) => report.weddingName.toLowerCase().contains(query))
+        .toList();
+  }
+
+  void updateSearch(String value) => searchText.value = value;
 
   @override
   void onInit() {

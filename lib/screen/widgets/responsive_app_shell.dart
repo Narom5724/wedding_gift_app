@@ -292,6 +292,13 @@ class _CompactNavigationItem extends StatelessWidget {
 
 void _navigateTo(int index) {
   if (index < 0 || index >= ResponsiveAppShell._destinations.length) return;
+
+  // Several module routes share the Manage destination. Keep the current
+  // module open when its already-selected navigation item is tapped.
+  if (ResponsiveAppShell._destinationIndexForRoute(Get.currentRoute) == index) {
+    return;
+  }
+
   final destination = ResponsiveAppShell._destinations[index];
   if (Get.currentRoute != destination.route) {
     Get.offNamed(destination.route);

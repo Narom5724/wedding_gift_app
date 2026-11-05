@@ -7,19 +7,36 @@ import 'package:wedding_gift_app/screen/gift/widget/gift_delete_dialog.dart';
 import 'package:wedding_gift_app/screen/gift/widget/gift_edit_widget.dart';
 import 'package:wedding_gift_app/screen/gift/widget/gift_list_widget.dart';
 
-class GiftScreen extends GetView<GiftController> {
+class GiftScreen extends StatefulWidget {
   const GiftScreen({super.key});
+
+  @override
+  State<GiftScreen> createState() => _GiftScreenState();
+}
+
+class _GiftScreenState extends State<GiftScreen> {
+  late final GiftController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<GiftController>();
+    controller.loadRelatedNames();
+  }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWide = constraints.maxWidth >= 760;
+        final isWide = constraints.maxWidth >= 600;
 
         return Scaffold(
-          appBar: isWide ? null : AppBar(title: Text('gifts'.tr)),
+          appBar: AppBar(
+            leading: BackButton(onPressed: Get.back),
+            title: Text('gifts'.tr),
+          ),
           body: SafeArea(
-            top: isWide,
+            top: false,
             child: Padding(
               padding: EdgeInsets.all(isWide ? 12 : 16),
               child: Obx(() {
@@ -28,13 +45,13 @@ class GiftScreen extends GetView<GiftController> {
                 return Column(
                   children: [
                     TextField(
-                      decoration: const InputDecoration(
-                        hintText: 'Search by name, ID, amount, date, or notes',
-                        prefixIcon: Icon(Icons.search_rounded),
+                      decoration: InputDecoration(
+                        hintText: 'search_gifts'.tr,
+                        prefixIcon: const Icon(Icons.search_rounded),
                       ),
                       onChanged: controller.updateSearch,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 18),
                     LayoutBuilder(
                       builder: (context, rowConstraints) {
                         final compactAction = rowConstraints.maxWidth < 400;
@@ -70,6 +87,9 @@ class GiftScreen extends GetView<GiftController> {
                       child: GiftListWidget(
                         gifts: gifts,
                         isLoading: controller.isLoading.value,
+                        isDesktopLayout: isWide,
+                        weddingNames: {...controller.weddingNames},
+                        guestNames: {...controller.guestNames},
                         errorMessage: controller.errorMessage.value,
                         onRefresh: controller.loadGifts,
                         onEdit: (gift) => showDialog(

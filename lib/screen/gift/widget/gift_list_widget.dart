@@ -1,8 +1,9 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:wedding_gift_app/models/gift/gift_model.dart';
 import 'package:wedding_gift_app/screen/gift/widget/gift_card_widget.dart';
+import 'package:wedding_gift_app/screen/widgets/app_record_table.dart';
 import 'package:wedding_gift_app/utils/currency_helper.dart';
 
 class GiftListWidget extends StatelessWidget {
@@ -11,6 +12,9 @@ class GiftListWidget extends StatelessWidget {
     required this.gifts,
     required this.isLoading,
     required this.errorMessage,
+    this.isDesktopLayout,
+    this.weddingNames = const {},
+    this.guestNames = const {},
     required this.onRefresh,
     required this.onEdit,
     required this.onDelete,
@@ -19,6 +23,9 @@ class GiftListWidget extends StatelessWidget {
   final List<GiftModel> gifts;
   final bool isLoading;
   final String errorMessage;
+  final bool? isDesktopLayout;
+  final Map<String, String> weddingNames;
+  final Map<String, String> guestNames;
   final Future<void> Function() onRefresh;
   final ValueChanged<GiftModel> onEdit;
   final Future<void> Function(String) onDelete;
@@ -65,67 +72,50 @@ class GiftListWidget extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 760) {
+        if (isDesktopLayout ?? constraints.maxWidth >= 600) {
           return RefreshIndicator(
             onRefresh: onRefresh,
             child: SingleChildScrollView(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: const [
-                    DataColumn(label: Text('Gift ID')),
-                    DataColumn(label: Text('Wedding ID')),
-                    DataColumn(label: Text('Guest ID')),
-                    DataColumn(label: Text('Amount')),
-                    DataColumn(label: Text('Received by')),
-                    DataColumn(label: Text('Date')),
-                    DataColumn(label: Text('Notes')),
-                    DataColumn(label: Text('Actions')),
-                  ],
-                  rows: gifts.map((gift) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(gift.id)),
-                        DataCell(Text(gift.weddingId)),
-                        DataCell(Text(gift.guestId)),
-                        DataCell(
-                          Text(
-                            CurrencyHelper.formatAmount(
-                              gift.amount,
-                              gift.currency,
-                            ),
-                          ),
-                        ),
-                        DataCell(Text(gift.paymentMethod)),
-                        DataCell(
-                          Text(
-                            DateFormat('dd MMM yyyy').format(gift.receivedDate),
-                          ),
-                        ),
-                        DataCell(Text(gift.notes)),
-                        DataCell(
-                          PopupMenuButton<String>(
-                            tooltip: 'Gift actions',
-                            onSelected: (value) {
-                              if (value == 'edit') {
-                                onEdit(gift);
-                              } else if (value == 'delete') {
-                                onDelete(gift.id);
-                              }
-                            },
-                            itemBuilder: (context) => const [
-                              PopupMenuItem(value: 'edit', child: Text('Edit')),
-                              PopupMenuItem(
-                                value: 'delete',
-                                child: Text('Delete'),
-                              ),
-                            ],
-                          ),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: AppRecordTable(
+                columns: const [
+                  'Wedding',
+                  'Guest',
+                  'Amount',
+                  'Received by',
+                  'Date',
+                  'Notes',
+                  'Actions',
+                ],
+                rows: gifts.map((gift) {
+                  return [
+                    Text(weddingNames[gift.weddingId] ?? '-'),
+                    Text(guestNames[gift.guestId] ?? '-'),
+                    Text(
+                      CurrencyHelper.formatAmount(gift.amount, gift.currency),
+                    ),
+                    Text(gift.paymentMethod),
+                    Text(DateFormat('dd MMM yyyy').format(gift.receivedDate)),
+                    Text(gift.notes),
+                    PopupMenuButton<String>(
+                      tooltip: 'Gift actions',
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          onEdit(gift);
+                        } else if (value == 'delete') {
+                          onDelete(gift.id);
+                        }
+                      },
+                      itemBuilder: (context) => const [
+                        PopupMenuItem(value: 'edit', child: Text('Edit')),
+                        PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Delete'),
                         ),
                       ],
-                    );
-                  }).toList(),
-                ),
+                    ),
+                  ];
+                }).toList(),
               ),
             ),
           );
@@ -139,6 +129,8 @@ class GiftListWidget extends StatelessWidget {
               final gift = gifts[index];
               return GiftCardWidget(
                 gift: gift,
+                weddingName: weddingNames[gift.weddingId] ?? '-',
+                guestName: guestNames[gift.guestId] ?? '-',
                 onEdit: () => onEdit(gift),
                 onDelete: () => onDelete(gift.id),
               );
@@ -149,3 +141,5 @@ class GiftListWidget extends StatelessWidget {
     );
   }
 }
+
+

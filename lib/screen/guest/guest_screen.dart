@@ -14,12 +14,15 @@ class GuestScreen extends GetView<GuestController> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final isWide = constraints.maxWidth >= 760;
+        final isWide = constraints.maxWidth >= 600;
 
         return Scaffold(
-          appBar: isWide ? null : AppBar(title: Text('guests'.tr)),
+          appBar: AppBar(
+            leading: BackButton(onPressed: Get.back),
+            title: Text('guests'.tr),
+          ),
           body: SafeArea(
-            top: isWide,
+            top: false,
             child: Padding(
               padding: EdgeInsets.all(isWide ? 12 : 16),
               child: Obx(() {
@@ -32,14 +35,14 @@ class GuestScreen extends GetView<GuestController> {
                         final sideBySide = searchConstraints.maxWidth >= 600;
                         final searchField = TextField(
                           decoration: InputDecoration(
-                            hintText: 'Search guest',
+                            hintText: 'search_guests'.tr,
                             prefixIcon: const Icon(Icons.search_rounded),
                           ),
                           onChanged: controller.updateSearch,
                         );
                         final relationshipField = TextField(
                           decoration: InputDecoration(
-                            hintText: 'Filter by relationship',
+                            hintText: 'filter_guest_relationship'.tr,
                             prefixIcon: const Icon(Icons.tune_rounded),
                           ),
                           onChanged: controller.updateRelationshipFilter,
@@ -64,7 +67,7 @@ class GuestScreen extends GetView<GuestController> {
                         );
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 18),
                     LayoutBuilder(
                       builder: (context, rowConstraints) {
                         final compactAction = rowConstraints.maxWidth < 400;
@@ -100,6 +103,7 @@ class GuestScreen extends GetView<GuestController> {
                       child: GuestListWidget(
                         guests: guests,
                         isLoading: controller.isLoading.value,
+                        isDesktopLayout: isWide,
                         errorMessage: controller.errorMessage.value,
                         onRefresh: controller.loadGuests,
                         onEdit: (guest) => showDialog(

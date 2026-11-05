@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../models/guest/guest_model.dart';
+import '../../widgets/app_record_table.dart';
 import 'guest_card_widget.dart';
 
 class GuestListWidget extends StatelessWidget {
@@ -9,6 +10,7 @@ class GuestListWidget extends StatelessWidget {
     required this.guests,
     required this.isLoading,
     required this.errorMessage,
+    this.isDesktopLayout,
     required this.onRefresh,
     required this.onEdit,
     required this.onDelete,
@@ -17,6 +19,7 @@ class GuestListWidget extends StatelessWidget {
   final List<GuestModel> guests;
   final bool isLoading;
   final String errorMessage;
+  final bool? isDesktopLayout;
   final Future<void> Function() onRefresh;
   final ValueChanged<GuestModel> onEdit;
   final Future<void> Function(String) onDelete;
@@ -63,52 +66,46 @@ class GuestListWidget extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        if (constraints.maxWidth >= 760) {
+        if (isDesktopLayout ?? constraints.maxWidth >= 600) {
           return RefreshIndicator(
             onRefresh: onRefresh,
             child: SingleChildScrollView(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: const [
-                    DataColumn(label: Text('Name')),
-                    DataColumn(label: Text('Relationship')),
-                    DataColumn(label: Text('Phone')),
-                    DataColumn(label: Text('Address')),
-                    DataColumn(label: Text('Notes')),
-                    DataColumn(label: Text('Actions')),
-                  ],
-                  rows: guests.map((guest) {
-                    return DataRow(
-                      cells: [
-                        DataCell(Text(guest.fullName)),
-                        DataCell(Text(guest.relationship)),
-                        DataCell(Text(guest.phone)),
-                        DataCell(Text(guest.address)),
-                        DataCell(Text(guest.notes)),
-                        DataCell(
-                          PopupMenuButton<String>(
-                            tooltip: 'Guest actions',
-                            onSelected: (value) {
-                              if (value == 'edit') {
-                                onEdit(guest);
-                              } else if (value == 'delete') {
-                                onDelete(guest.id);
-                              }
-                            },
-                            itemBuilder: (context) => const [
-                              PopupMenuItem(value: 'edit', child: Text('Edit')),
-                              PopupMenuItem(
-                                value: 'delete',
-                                child: Text('Delete'),
-                              ),
-                            ],
-                          ),
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: AppRecordTable(
+                columns: const [
+                  'Name',
+                  'Relationship',
+                  'Phone',
+                  'Address',
+                  'Notes',
+                  'Actions',
+                ],
+                rows: guests.map((guest) {
+                  return [
+                    Text(guest.fullName),
+                    Text(guest.relationship),
+                    Text(guest.phone),
+                    Text(guest.address),
+                    Text(guest.notes),
+                    PopupMenuButton<String>(
+                      tooltip: 'Guest actions',
+                      onSelected: (value) {
+                        if (value == 'edit') {
+                          onEdit(guest);
+                        } else if (value == 'delete') {
+                          onDelete(guest.id);
+                        }
+                      },
+                      itemBuilder: (context) => const [
+                        PopupMenuItem(value: 'edit', child: Text('Edit')),
+                        PopupMenuItem(
+                          value: 'delete',
+                          child: Text('Delete'),
                         ),
                       ],
-                    );
-                  }).toList(),
-                ),
+                    ),
+                  ];
+                }).toList(),
               ),
             ),
           );

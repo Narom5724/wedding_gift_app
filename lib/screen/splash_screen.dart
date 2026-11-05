@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../constants/app_colors.dart';
-import '../routes/app_route.dart';
-import 'widgets/wedding_couple_illustration.dart';
+import 'package:wedding_gift_app/constants/app_colors.dart';
+import 'package:wedding_gift_app/routes/app_route.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -17,9 +16,16 @@ class SplashScreen extends StatelessWidget {
           final isWide = constraints.maxWidth >= 760;
           final illustration = ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 440),
-            child: const AspectRatio(
-              aspectRatio: 1.125,
-              child: WeddingCoupleIllustration(),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: AspectRatio(
+                aspectRatio: 1.503,
+                child: Image.asset(
+                  'assets/images/Pre_wedding.jpg',
+                  fit: BoxFit.cover,
+                  semanticLabel: 'Bride and groom at their wedding',
+                ),
+              ),
             ),
           );
 

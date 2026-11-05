@@ -268,10 +268,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       SummaryCard(
                         icon: Icons.attach_money_rounded,
                         title: 'total_gift_amount'.tr,
-                        value:
-                            '\$${NumberFormat('#,##0.00').format(dashboardController.summary.value.totalUsd)}',
-                        subtitle:
-                            '${'khr_collected'.tr}: ៛${NumberFormat('#,##0').format(dashboardController.summary.value.totalKhr)}',
+                        value: CurrencyHelper.formatAmount(
+                          dashboardController.summary.value.totalUsd,
+                          CurrencyHelper.usd,
+                        ),
+                        secondaryValue: CurrencyHelper.formatAmount(
+                          dashboardController.summary.value.totalKhr,
+                          CurrencyHelper.khr,
+                        ),
+                        subtitle: 'gift_amounts_received'.tr,
                         color: AppColors.rosePink,
                         height: 236,
                       ),

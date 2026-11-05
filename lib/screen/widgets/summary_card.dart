@@ -8,6 +8,7 @@ class SummaryCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.value,
+    this.secondaryValue,
     this.subtitle,
     this.color,
     this.onTap,
@@ -17,6 +18,7 @@ class SummaryCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
+  final String? secondaryValue;
   final String? subtitle;
   final Color? color;
   final VoidCallback? onTap;
@@ -68,15 +70,17 @@ class SummaryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              Text(
-                value,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                  fontWeight: FontWeight.w700,
+              if (secondaryValue == null)
+                _ValueText(value)
+              else
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _ValueText(value),
+                    const SizedBox(height: 4),
+                    _ValueText(secondaryValue!),
+                  ],
                 ),
-              ),
               if (height != null) const Spacer(),
               if (subtitle != null) ...[
                 const SizedBox(height: 8),
@@ -92,6 +96,25 @@ class SummaryCard extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ValueText extends StatelessWidget {
+  const _ValueText(this.value);
+
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      value,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+        color: Theme.of(context).colorScheme.onSurface,
+        fontWeight: FontWeight.w700,
       ),
     );
   }

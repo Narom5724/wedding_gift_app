@@ -78,6 +78,7 @@ Widget _guestList() {
     isLoading: false,
     errorMessage: '',
     onRefresh: () async {},
+    onTap: (_) {},
     onEdit: (_) {},
     onDelete: (_) async {},
   );
@@ -99,6 +100,7 @@ Widget _giftList() {
     isLoading: false,
     errorMessage: '',
     onRefresh: () async {},
+    onTap: (_) {},
     onEdit: (_) {},
     onDelete: (_) async {},
   );

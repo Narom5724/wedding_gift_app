@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import 'package:wedding_gift_app/constants/app_theme.dart';
-
 class ResponsiveAppShell extends StatelessWidget {
   const ResponsiveAppShell({
     super.key,
@@ -13,7 +11,11 @@ class ResponsiveAppShell extends StatelessWidget {
   final int? selectedIndex;
   final Widget child;
 
-  static const _destinations = <_AppDestination>[
+  // ======================================================
+  // NAVIGATION DESTINATIONS
+  // ======================================================
+
+  static const List<_AppDestination> _destinations = [
     _AppDestination(
       label: 'Home',
       route: '/home',
@@ -21,17 +23,11 @@ class ResponsiveAppShell extends StatelessWidget {
       selectedIcon: Icons.home_rounded,
     ),
     _AppDestination(
-      label: 'manage',
+      label: 'Manage',
       route: '/manage',
       icon: Icons.work_outline_rounded,
       selectedIcon: Icons.work_rounded,
     ),
-    // _AppDestination(
-    //   label: 'Gift',
-    //   route: '/gift',
-    //   icon: Icons.card_giftcard_outlined,
-    //   selectedIcon: Icons.card_giftcard_rounded,
-    // ),
     _AppDestination(
       label: 'Report',
       route: '/report',
@@ -46,14 +42,26 @@ class ResponsiveAppShell extends StatelessWidget {
     ),
   ];
 
+  // ======================================================
+  // ROUTE INDEX
+  // ======================================================
+
   static int? _destinationIndexForRoute(String route) {
     final path = Uri.tryParse(route)?.path ?? route;
-    bool matchesAny(Iterable<String> routes) => routes.any(
-      (candidate) => path == candidate || path.startsWith('$candidate/'),
-    );
 
-    if (matchesAny(['/home', '/dashboard'])) return 0;
-    if (matchesAny({
+    bool matchesAny(List<String> routes) {
+      return routes.any(
+        (candidate) => path == candidate || path.startsWith('$candidate/'),
+      );
+    }
+
+    // Home
+    if (matchesAny(['/home', '/dashboard'])) {
+      return 0;
+    }
+
+    // Manage: Wedding, Guest, Gift, Gallery
+    if (matchesAny([
       '/manage',
       '/wedding',
       '/wedding-detail',
@@ -62,26 +70,45 @@ class ResponsiveAppShell extends StatelessWidget {
       '/gift',
       '/gift-detail',
       '/gallery',
-    })) {
+    ])) {
       return 1;
     }
-    if (matchesAny(['/report'])) return 2;
-    if (matchesAny(['/profile', '/setting'])) return 3;
+
+    // Report
+    if (matchesAny(['/report'])) {
+      return 2;
+    }
+
+    // Profile and Settings
+    if (matchesAny(['/profile', '/setting'])) {
+      return 3;
+    }
+
     return null;
   }
+
+  // ======================================================
+  // MAIN RESPONSIVE LAYOUT
+  // ======================================================
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final routeIndex = _destinationIndexForRoute(Get.currentRoute);
+
         final requestedIndex = selectedIndex;
-        final validFallback = requestedIndex != null &&
+
+        final validFallback =
+            requestedIndex != null &&
                 requestedIndex >= 0 &&
                 requestedIndex < _destinations.length
             ? requestedIndex
             : null;
+
         final activeIndex = routeIndex ?? validFallback;
+
+        // Desktop
         if (constraints.maxWidth >= 900) {
           return Scaffold(
             backgroundColor: Theme.of(context).colorScheme.surface,
@@ -91,17 +118,20 @@ class ResponsiveAppShell extends StatelessWidget {
                   width: 100,
                   child: _WideNavigationRail(selectedIndex: activeIndex),
                 ),
+
                 VerticalDivider(
                   width: 1,
                   thickness: 1,
                   color: Theme.of(context).dividerColor,
                 ),
+
                 Expanded(child: child),
               ],
             ),
           );
         }
 
+        // Mobile and Tablet
         return Scaffold(
           body: child,
           bottomNavigationBar: _CompactNavigationBar(
@@ -114,6 +144,10 @@ class ResponsiveAppShell extends StatelessWidget {
   }
 }
 
+// ======================================================
+// DESKTOP SIDEBAR
+// ======================================================
+
 class _WideNavigationRail extends StatelessWidget {
   const _WideNavigationRail({required this.selectedIndex});
 
@@ -123,31 +157,45 @@ class _WideNavigationRail extends StatelessWidget {
   Widget build(BuildContext context) {
     return NavigationRail(
       key: const ValueKey('responsive-navigation-rail'),
+
       selectedIndex: selectedIndex,
+
       labelType: NavigationRailLabelType.all,
+
       minWidth: 100,
-      groupAlignment: -0.75,
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      indicatorColor: AppColors.softPink,
+
+      groupAlignment: -0.85,
+
+      backgroundColor: Colors.white,
+
+      indicatorColor: const Color(0xFFFFF0EC),
+
       indicatorShape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(30),
       ),
-      selectedIconTheme: IconThemeData(
-        color: Theme.of(context).colorScheme.onSurface,
+
+      selectedIconTheme: const IconThemeData(
+        color: Color(0xFF351D17),
         size: 25,
       ),
-      unselectedIconTheme: IconThemeData(
-        color: Theme.of(context).colorScheme.onSurface,
+
+      unselectedIconTheme: const IconThemeData(
+        color: Color(0xFF351D17),
         size: 25,
       ),
-      selectedLabelTextStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
+
+      selectedLabelTextStyle: const TextStyle(
+        color: Color(0xFF351D17),
+        fontSize: 13,
         fontWeight: FontWeight.w600,
       ),
-      unselectedLabelTextStyle: TextStyle(
-        color: Theme.of(context).colorScheme.onSurface,
+
+      unselectedLabelTextStyle: const TextStyle(
+        color: Color(0xFF351D17),
+        fontSize: 13,
         fontWeight: FontWeight.w400,
       ),
+
       destinations: [
         for (final destination in ResponsiveAppShell._destinations)
           NavigationRailDestination(
@@ -156,10 +204,15 @@ class _WideNavigationRail extends StatelessWidget {
             label: Text(destination.label.tr),
           ),
       ],
+
       onDestinationSelected: _navigateTo,
     );
   }
 }
+
+// ======================================================
+// MOBILE / TABLET NAVIGATION
+// ======================================================
 
 class _CompactNavigationBar extends StatelessWidget {
   const _CompactNavigationBar({
@@ -176,14 +229,18 @@ class _CompactNavigationBar extends StatelessWidget {
       top: false,
       child: Container(
         key: const ValueKey('responsive-navigation-bar'),
+
         height: isSmall ? 64 : 72,
+
         padding: EdgeInsets.symmetric(horizontal: isSmall ? 6 : 20),
+
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           border: Border(
             top: BorderSide(color: Theme.of(context).dividerColor),
           ),
         ),
+
         child: Row(
           children: [
             for (
@@ -206,6 +263,10 @@ class _CompactNavigationBar extends StatelessWidget {
   }
 }
 
+// ======================================================
+// COMPACT NAVIGATION ITEM
+// ======================================================
+
 class _CompactNavigationItem extends StatelessWidget {
   const _CompactNavigationItem({
     required this.destination,
@@ -223,17 +284,9 @@ class _CompactNavigationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final maxPillWidth = isSmall ? 64.0 : 72.0;
         final pillWidth = (constraints.maxWidth - 4)
-            .clamp(0.0, maxPillWidth)
+            .clamp(0.0, isSmall ? 64.0 : 72.0)
             .toDouble();
-        final icon = Icon(
-          selected ? destination.selectedIcon : destination.icon,
-          size: 24,
-          color: selected
-              ? Theme.of(context).colorScheme.onSurface
-              : AppColors.mutedGray,
-        );
 
         return Semantics(
           button: true,
@@ -250,7 +303,7 @@ class _CompactNavigationItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     AnimatedContainer(
-                      duration: const Duration(milliseconds: 160),
+                      duration: const Duration(milliseconds: 180),
                       curve: Curves.easeOut,
                       width: pillWidth,
                       height: 40,
@@ -261,17 +314,21 @@ class _CompactNavigationItem extends StatelessWidget {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       alignment: Alignment.center,
-                      child: icon,
+                      child: Icon(
+                        selected ? destination.selectedIcon : destination.icon,
+                        size: 24,
+                        color: const Color(0xFF351D17),
+                      ),
                     ),
+
                     if (!isSmall) ...[
                       const SizedBox(height: 2),
                       Text(
                         destination.label.tr,
                         maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: selected
-                              ? Theme.of(context).colorScheme.onSurface
-                              : AppColors.mutedGray,
+                          color: const Color(0xFF351D17),
                           fontSize: 11,
                           fontWeight: selected
                               ? FontWeight.w600
@@ -290,20 +347,33 @@ class _CompactNavigationItem extends StatelessWidget {
   }
 }
 
-void _navigateTo(int index) {
-  if (index < 0 || index >= ResponsiveAppShell._destinations.length) return;
+// ======================================================
+// NAVIGATION ACTION
+// ======================================================
 
-  // Several module routes share the Manage destination. Keep the current
-  // module open when its already-selected navigation item is tapped.
-  if (ResponsiveAppShell._destinationIndexForRoute(Get.currentRoute) == index) {
+void _navigateTo(int index) {
+  if (index < 0 || index >= ResponsiveAppShell._destinations.length) {
+    return;
+  }
+
+  final currentIndex = ResponsiveAppShell._destinationIndexForRoute(
+    Get.currentRoute,
+  );
+
+  if (currentIndex == index) {
     return;
   }
 
   final destination = ResponsiveAppShell._destinations[index];
+
   if (Get.currentRoute != destination.route) {
     Get.offNamed(destination.route);
   }
 }
+
+// ======================================================
+// DESTINATION MODEL
+// ======================================================
 
 class _AppDestination {
   const _AppDestination({

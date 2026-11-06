@@ -6,11 +6,13 @@ class GuestCardWidget extends StatelessWidget {
   const GuestCardWidget({
     super.key,
     required this.guest,
+    required this.onTap,
     required this.onEdit,
     required this.onDelete,
   });
 
   final GuestModel guest;
+  final VoidCallback onTap;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
@@ -28,6 +30,7 @@ class GuestCardWidget extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: ListTile(
+        onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
           backgroundColor: theme.colorScheme.primaryContainer,

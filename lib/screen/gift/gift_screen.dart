@@ -6,6 +6,7 @@ import 'package:wedding_gift_app/screen/gift/widget/gift_add_widget.dart';
 import 'package:wedding_gift_app/screen/gift/widget/gift_delete_dialog.dart';
 import 'package:wedding_gift_app/screen/gift/widget/gift_edit_widget.dart';
 import 'package:wedding_gift_app/screen/gift/widget/gift_list_widget.dart';
+import 'package:wedding_gift_app/screen/gift/widget/gift_detail_widget.dart';
 
 class GiftScreen extends StatefulWidget {
   const GiftScreen({super.key});
@@ -92,6 +93,14 @@ class _GiftScreenState extends State<GiftScreen> {
                         guestNames: {...controller.guestNames},
                         errorMessage: controller.errorMessage.value,
                         onRefresh: controller.loadGifts,
+                        onTap: (gift) => showDialog<void>(
+                          context: context,
+                          builder: (_) => GiftDetailWidget(
+                            gift: gift,
+                            weddingName: controller.weddingNames[gift.weddingId] ?? '-',
+                            guestName: controller.guestNames[gift.guestId] ?? '-',
+                          ),
+                        ),
                         onEdit: (gift) => showDialog(
                           context: context,
                           builder: (_) => GiftEditWidget(

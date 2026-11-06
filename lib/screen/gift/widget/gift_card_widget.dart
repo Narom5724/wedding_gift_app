@@ -8,6 +8,7 @@ class GiftCardWidget extends StatelessWidget {
   const GiftCardWidget({
     super.key,
     required this.gift,
+    required this.onTap,
     required this.weddingName,
     required this.guestName,
     required this.onEdit,
@@ -15,6 +16,7 @@ class GiftCardWidget extends StatelessWidget {
   });
 
   final GiftModel gift;
+  final VoidCallback onTap;
   final String weddingName;
   final String guestName;
   final VoidCallback onEdit;
@@ -34,6 +36,7 @@ class GiftCardWidget extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: ListTile(
+        onTap: onTap,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: CircleAvatar(
           backgroundColor: theme.colorScheme.primaryContainer,

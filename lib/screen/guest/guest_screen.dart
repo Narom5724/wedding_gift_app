@@ -5,6 +5,7 @@ import '../../controller/guest_controller.dart';
 import 'widget/guest_add_widget.dart';
 import 'widget/guest_delete_dialog.dart';
 import 'widget/guest_edit_widget.dart';
+import 'widget/guest_detail_widget.dart';
 import 'widget/guest_list_widget.dart';
 
 class GuestScreen extends GetView<GuestController> {
@@ -30,42 +31,12 @@ class GuestScreen extends GetView<GuestController> {
 
                 return Column(
                   children: [
-                    LayoutBuilder(
-                      builder: (context, searchConstraints) {
-                        final sideBySide = searchConstraints.maxWidth >= 600;
-                        final searchField = TextField(
+                    TextField(
                           decoration: InputDecoration(
                             hintText: 'search_guests'.tr,
                             prefixIcon: const Icon(Icons.search_rounded),
                           ),
                           onChanged: controller.updateSearch,
-                        );
-                        final relationshipField = TextField(
-                          decoration: InputDecoration(
-                            hintText: 'filter_guest_relationship'.tr,
-                            prefixIcon: const Icon(Icons.tune_rounded),
-                          ),
-                          onChanged: controller.updateRelationshipFilter,
-                        );
-
-                        if (!sideBySide) {
-                          return Column(
-                            children: [
-                              searchField,
-                              const SizedBox(height: 10),
-                              relationshipField,
-                            ],
-                          );
-                        }
-
-                        return Row(
-                          children: [
-                            Expanded(flex: 3, child: searchField),
-                            const SizedBox(width: 12),
-                            Expanded(flex: 2, child: relationshipField),
-                          ],
-                        );
-                      },
                     ),
                     const SizedBox(height: 18),
                     LayoutBuilder(
@@ -106,6 +77,10 @@ class GuestScreen extends GetView<GuestController> {
                         isDesktopLayout: isWide,
                         errorMessage: controller.errorMessage.value,
                         onRefresh: controller.loadGuests,
+                        onTap: (guest) => showDialog<void>(
+                          context: context,
+                          builder: (_) => GuestDetailWidget(guest: guest),
+                        ),
                         onEdit: (guest) => showDialog(
                           context: context,
                           builder: (_) => GuestEditWidget(

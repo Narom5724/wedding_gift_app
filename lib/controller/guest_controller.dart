@@ -14,7 +14,6 @@ class GuestController extends GetxController {
   final isLoading = false.obs;
   final isSaving = false.obs;
   final searchText = ''.obs;
-  final relationshipFilter = ''.obs;
   final selectedWeddingId = ''.obs;
   final errorMessage = ''.obs;
 
@@ -31,7 +30,6 @@ class GuestController extends GetxController {
       final data = await _service.fetchGuests(
         weddingId: weddingId ?? selectedWeddingId.value,
         query: searchText.value,
-        relationship: relationshipFilter.value,
       );
       guestList.assignAll(data);
     } catch (error, stackTrace) {
@@ -74,11 +72,6 @@ class GuestController extends GetxController {
 
   void updateSearch(String value) {
     searchText.value = value;
-    loadGuests();
-  }
-
-  void updateRelationshipFilter(String value) {
-    relationshipFilter.value = value;
     loadGuests();
   }
 

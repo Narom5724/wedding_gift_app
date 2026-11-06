@@ -12,6 +12,7 @@ class GuestListWidget extends StatelessWidget {
     required this.errorMessage,
     this.isDesktopLayout,
     required this.onRefresh,
+    required this.onTap,
     required this.onEdit,
     required this.onDelete,
   });
@@ -21,6 +22,7 @@ class GuestListWidget extends StatelessWidget {
   final String errorMessage;
   final bool? isDesktopLayout;
   final Future<void> Function() onRefresh;
+  final ValueChanged<GuestModel> onTap;
   final ValueChanged<GuestModel> onEdit;
   final Future<void> Function(String) onDelete;
 
@@ -72,6 +74,7 @@ class GuestListWidget extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: AppRecordTable(
+                onRowTap: guests.map((guest) => () => onTap(guest)).toList(),
                 columns: const [
                   'Name',
                   'Relationship',
@@ -82,7 +85,7 @@ class GuestListWidget extends StatelessWidget {
                 ],
                 rows: guests.map((guest) {
                   return [
-                    Text(guest.fullName),
+                    InkWell(onTap: () => onTap(guest), child: Text(guest.fullName)),
                     Text(guest.relationship),
                     Text(guest.phone),
                     Text(guest.address),
@@ -119,6 +122,7 @@ class GuestListWidget extends StatelessWidget {
               final guest = guests[index];
               return GuestCardWidget(
                 guest: guest,
+                onTap: () => onTap(guest),
                 onEdit: () => onEdit(guest),
                 onDelete: () => onDelete(guest.id),
               );

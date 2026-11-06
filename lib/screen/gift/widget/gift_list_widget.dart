@@ -16,6 +16,7 @@ class GiftListWidget extends StatelessWidget {
     this.weddingNames = const {},
     this.guestNames = const {},
     required this.onRefresh,
+    required this.onTap,
     required this.onEdit,
     required this.onDelete,
   });
@@ -27,6 +28,7 @@ class GiftListWidget extends StatelessWidget {
   final Map<String, String> weddingNames;
   final Map<String, String> guestNames;
   final Future<void> Function() onRefresh;
+  final ValueChanged<GiftModel> onTap;
   final ValueChanged<GiftModel> onEdit;
   final Future<void> Function(String) onDelete;
 
@@ -78,6 +80,7 @@ class GiftListWidget extends StatelessWidget {
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: AppRecordTable(
+                onRowTap: gifts.map((gift) => () => onTap(gift)).toList(),
                 columns: const [
                   'Wedding',
                   'Guest',
@@ -129,6 +132,7 @@ class GiftListWidget extends StatelessWidget {
               final gift = gifts[index];
               return GiftCardWidget(
                 gift: gift,
+                onTap: () => onTap(gift),
                 weddingName: weddingNames[gift.weddingId] ?? '-',
                 guestName: guestNames[gift.guestId] ?? '-',
                 onEdit: () => onEdit(gift),

@@ -27,7 +27,6 @@ class GuestService {
   Future<List<GuestModel>> fetchGuests({
     String weddingId = '',
     String query = '',
-    String relationship = '',
   }) async {
     final uid = _uid;
 
@@ -50,11 +49,11 @@ class GuestService {
       final matchesQuery =
           normalizedQuery.isEmpty ||
           guest.fullName.toLowerCase().contains(normalizedQuery) ||
-          guest.phone.toLowerCase().contains(normalizedQuery);
-      final matchesRelationship =
-          relationship.isEmpty ||
-          guest.relationship.toLowerCase() == relationship.toLowerCase();
-      return matchesQuery && matchesRelationship;
+          guest.phone.toLowerCase().contains(normalizedQuery) ||
+          guest.address.toLowerCase().contains(normalizedQuery) ||
+          guest.relationship.toLowerCase().contains(normalizedQuery) ||
+          guest.notes.toLowerCase().contains(normalizedQuery);
+      return matchesQuery;
     }).toList();
 
     return guests;

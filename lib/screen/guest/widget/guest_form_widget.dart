@@ -169,7 +169,6 @@ class _GuestFormWidgetState extends State<GuestFormWidget> {
                 hintText: 'contact_number'.tr,
                 prefixIcon: Icons.phone_outlined,
                 keyboardType: TextInputType.phone,
-                validator: _requiredValidator('required_phone'.tr),
               ),
             ),
           ],

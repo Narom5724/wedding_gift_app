@@ -5,10 +5,12 @@ class AppRecordTable extends StatelessWidget {
     super.key,
     required this.columns,
     required this.rows,
+    this.onRowTap,
   });
 
   final List<String> columns;
   final List<List<Widget>> rows;
+  final List<VoidCallback>? onRowTap;
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +53,22 @@ class AppRecordTable extends StatelessWidget {
                   DataColumn(label: Text(column.toUpperCase())),
               ],
               rows: [
-                for (final row in rows)
-                  DataRow(cells: [for (final cell in row) DataCell(cell)]),
+                for (var index = 0; index < rows.length; index++)
+                  DataRow(
+                    cells: [
+                      for (var cellIndex = 0;
+                          cellIndex < rows[index].length;
+                          cellIndex++)
+                        DataCell(
+                          rows[index][cellIndex],
+                          onTap: cellIndex == 0 &&
+                                  onRowTap != null &&
+                                  index < onRowTap!.length
+                              ? onRowTap![index]
+                              : null,
+                        ),
+                    ],
+                  ),
               ],
             ),
           ),
